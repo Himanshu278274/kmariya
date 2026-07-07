@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shreeju 🐼💗</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pink: #FFD6EA;
+    --sky: #C9EFFF;
+    --butter: #FFF3C4;
+    --grape: #8C6FE0;
+    --grape-deep: #6B4FC0;
+    --berry: #FF6FA0;
+    --berry-deep: #E14F82;
+    --ink: #4A3B5C;
+    --white: #FFFFFF;
+  }
+  *{ box-sizing:border-box; }
+  html,body{
+    margin:0; padding:0; min-height:100%;
+    background: linear-gradient(135deg, var(--pink) 0%, var(--sky) 55%, var(--butter) 100%);
+    font-family:'Quicksand', sans-serif;
+    color: var(--ink);
+    overflow-x:hidden;
+  }
+
+  #blobs{ position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+  .blob{
+    position:absolute; border-radius:50%;
+    filter: blur(2px);
+    opacity:0.55;
+    animation: float 14s ease-in-out infinite;
+  }
+  @keyframes float{
+    0%,100%{ transform: translate(0,0) scale(1); }
+    50%{ transform: translate(18px,-24px) scale(1.06); }
+  }
+  .doodle{
+    position:absolute; font-size: 22px; opacity:0.7;
+    animation: twinkle 3.4s ease-in-out infinite;
+  }
+  @keyframes twinkle{
+    0%,100%{ transform: scale(0.85) rotate(-6deg); opacity:0.45; }
+    50%{ transform: scale(1.05) rotate(6deg); opacity:0.9; }
+  }
+
+  .stage{
+    position:relative; z-index:1;
+    min-height:100vh; width:100%;
+    display:flex; align-items:center; justify-content:center;
+    padding: 60px 20px 40px;
+  }
+
+  .card-wrap{ position:relative; max-width: 420px; width:100%; }
+
+  .mascot{
+    position:absolute;
+    top: -58px; left:50%;
+    transform: translateX(-50%);
+    width: 108px; height:108px;
+    border-radius:50%;
+    background: radial-gradient(circle at 35% 30%, #fff, var(--pink) 65%);
+    border: 5px solid var(--white);
+    box-shadow: 0 10px 0 rgba(140,111,224,0.25), 0 14px 26px rgba(140,111,224,0.3);
+    display:flex; align-items:center; justify-content:center;
+    font-size: 56px;
+    z-index: 3;
+    animation: bob 2.6s ease-in-out infinite;
+  }
+  @keyframes bob{
+    0%,100%{ transform: translateX(-50%) translateY(0) rotate(-2deg); }
+    50%{ transform: translateX(-50%) translateY(-8px) rotate(2deg); }
+  }
+  .thought{
+    position:absolute;
+    top: -30px; left: calc(50% + 56px);
+    background: var(--white);
+    border: 3px solid var(--grape);
+    border-radius: 16px;
+    padding: 6px 10px;
+    font-size: 20px;
+    z-index: 4;
+    transform-origin: bottom left;
+    animation: pop-in .35s cubic-bezier(.34,1.56,.64,1);
+  }
+  .thought::after{
+    content:"";
+    position:absolute; left:-10px; bottom:6px;
+    width:0; height:0;
+    border: 7px solid transparent;
+    border-right-color: var(--grape);
+  }
+  @keyframes pop-in{
+    from{ transform: scale(0.3); opacity:0; }
+    to{ transform: scale(1); opacity:1; }
+  }
+
+  .card{
+    background: var(--white);
+    border-radius: 32px;
+    border: 4px solid var(--grape);
+    padding: 78px 34px 34px;
+    text-align:center;
+    box-shadow: 0 10px 0 var(--grape), 0 20px 34px rgba(140,111,224,0.35);
+  }
+
+  .meter-row{ display:flex; align-items:center; gap:8px; justify-content:center; margin-bottom: 16px; }
+  .meter-label{ font-family:'Baloo 2'; font-size:11px; letter-spacing:.08em; text-transform:uppercase; font-weight:700; color: var(--grape); }
+  .meter-track{ width: 110px; height:10px; border-radius:8px; background: #f0e9ff; overflow:hidden; border: 2px solid var(--grape); }
+  .meter-fill{ height:100%; width: 12%; background: linear-gradient(90deg, var(--berry), var(--grape)); border-radius:8px; transition: width .5s ease; }
+  .meter-pct{ font-family:'Baloo 2'; font-size:12px; font-weight:700; color: var(--berry-deep); min-width: 32px; text-align:left; }
+
+  h1{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:800;
+    font-size: clamp(26px, 6vw, 34px);
+    line-height:1.2;
+    margin: 0 0 10px;
+    color: var(--grape-deep);
+  }
+
+  .subtext{
+    font-size:16px;
+    font-weight:600;
+    color: #8a7aa3;
+    margin: 0 0 30px;
+    min-height: 24px;
+    transition: opacity .2s ease;
+  }
+
+  .btn-row{ display:flex; gap:16px; justify-content:center; align-items:center; position:relative; min-height: 70px; }
+
+  button{
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    border:none; cursor:pointer;
+    border-radius: 20px;
+    transition: transform .12s ease, box-shadow .12s ease, font-size .2s ease, padding .2s ease, opacity .3s ease;
+    touch-action: manipulation; /* mobile: prevents double-tap-zoom ghost clicks */
+  }
+  button:focus-visible{ outline: 3px solid var(--grape); outline-offset:3px; }
+  button:active{ transform: translateY(4px) !important; }
+
+  #yesBtn{
+    background: var(--berry);
+    color: var(--white);
+    padding: 15px 26px;
+    font-size: 16px;
+    box-shadow: 0 6px 0 var(--berry-deep);
+  }
+  #yesBtn:hover{ transform: translateY(-2px); }
+
+  #noBtn{
+    background: var(--white);
+    color: var(--grape);
+    border: 3px solid var(--grape);
+    padding: 12px 22px;
+    font-size: 15px;
+    box-shadow: 0 5px 0 var(--grape);
+    position: relative;
+    white-space: nowrap;
+  }
+  #noBtn.roaming{
+    position: fixed;
+    z-index: 5;
+    transition: left .38s cubic-bezier(.34,1.56,.64,1), top .38s cubic-bezier(.34,1.56,.64,1), transform .38s ease, font-size .2s ease, padding .2s ease, opacity .35s ease;
+  }
+  #noBtn.gone{
+    opacity:0;
+    transform: scale(0.3) rotate(30deg) !important;
+    pointer-events:none;
+  }
+
+  .signature{
+    margin-top: 26px;
+    font-family:'Baloo 2', sans-serif;
+    font-size: 12px;
+    font-weight:600;
+    color:#b6a6d1;
+  }
+
+  /* ---------- YES SCREEN ---------- */
+  .yes-screen{ display:none; }
+  .yes-screen.active{ display:block; animation: unfold .5s ease forwards; }
+  @keyframes unfold{ from{ opacity:0; transform: translateY(14px) scale(0.97); } to{ opacity:1; transform:translateY(0) scale(1); } }
+
+  .mascot.happy{ font-size: 62px; animation: happy-bounce .6s ease-in-out infinite; }
+  @keyframes happy-bounce{
+    0%,100%{ transform: translateX(-50%) translateY(0) scale(1); }
+    50%{ transform: translateX(-50%) translateY(-14px) scale(1.08); }
+  }
+
+  .confetti-piece{
+    position:fixed; top:-10px;
+    opacity:0.95;
+    animation: fall linear forwards;
+    z-index: 4;
+  }
+  @keyframes fall{ to{ transform: translateY(110vh) rotate(360deg); opacity:0.2; } }
+
+  .sticker-pop{
+    position:fixed; z-index:6; font-size:28px; pointer-events:none;
+    left:0; top:0;
+    animation: stickerPop .8s cubic-bezier(.34,1.56,.64,1) forwards;
+  }
+  @keyframes stickerPop{
+    0%{ transform: translate(-50%,-50%) scale(0.3) rotate(-15deg); opacity:0; }
+    28%{ opacity:1; transform: translate(-50%,-62%) scale(1.15) rotate(6deg); }
+    70%{ transform: translate(-50%,-78%) scale(1) rotate(-4deg); opacity:1; }
+    100%{ transform: translate(-50%,-98%) scale(0.85) rotate(0deg); opacity:0; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .blob, .doodle, .mascot, .confetti-piece, .sticker-pop, .thought{ animation:none !important; transition:none !important; }
+  }
+
+  @media (max-width:480px){
+    .card{ padding: 74px 22px 28px; }
+    .thought{ left: calc(50% + 46px); }
+  }
+</style>
+</head>
+<body>
+
+<div id="blobs"></div>
+
+<div class="stage">
+  <div class="card-wrap">
+    <div class="mascot" id="mascot">🐼</div>
+    <div class="thought" id="thought" style="display:none;">👀</div>
+
+    <div class="card" id="card">
+      <div class="meter-row">
+        <span class="meter-label">Certainty</span>
+        <span class="meter-track"><span class="meter-fill" id="meterFill"></span></span>
+        <span class="meter-pct" id="meterPct">12%</span>
+      </div>
+
+      <div id="askBlock">
+        <h1>Kmariya de rhi 😒🥺😍😂</h1>
+        <p class="subtext" id="subtext">Sochke jawab dena sona, jaldi bhi 👀</p>
+        <div class="btn-row">
+          <button id="yesBtn" onclick="showYes()">Yes, obviously 💗</button>
+          <button id="noBtn" onclick="dodge(event)">No</button>
+        </div>
+      </div>
+
+      <div id="yesBlock" class="yes-screen">
+        <h1>Yesss omg!! 🎉</h1>
+        <p class="subtext">Thanku babu and love u a lot 💋😘😘💕</p>
+      </div>
+
+      <div class="signature">made with too much love, for shreeju dorling 🐼 my motki</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* soft floating background blobs */
+  const blobsWrap = document.getElementById('blobs');
+  const blobColors = ['#FFD6EA','#C9EFFF','#FFF3C4','#E6D9FF'];
+  for(let i=0;i<6;i++){
+    const b = document.createElement('div');
+    b.className = 'blob';
+    const size = 90 + Math.random()*140;
+    b.style.width = size+'px'; b.style.height = size+'px';
+    b.style.left = Math.random()*90 + 'vw';
+    b.style.top = Math.random()*90 + 'vh';
+    b.style.background = blobColors[i % blobColors.length];
+    b.style.animationDelay = (Math.random()*6)+'s';
+    b.style.animationDuration = (11 + Math.random()*8)+'s';
+    blobsWrap.appendChild(b);
+  }
+  const doodleChars = ['✨','⭐','🎀','💫','🌸'];
+  for(let i=0;i<14;i++){
+    const d = document.createElement('div');
+    d.className = 'doodle';
+    d.textContent = doodleChars[Math.floor(Math.random()*doodleChars.length)];
+    d.style.left = Math.random()*96 + 'vw';
+    d.style.top = Math.random()*92 + 'vh';
+    d.style.animationDelay = (Math.random()*3)+'s';
+    blobsWrap.appendChild(d);
+  }
+
+  const mascot = document.getElementById('mascot');
+  const thought = document.getElementById('thought');
+  const noBtn = document.getElementById('noBtn');
+  const yesBtn = document.getElementById('yesBtn');
+  const subtext = document.getElementById('subtext');
+  const meterFill = document.getElementById('meterFill');
+  const meterPct = document.getElementById('meterPct');
+  const askBlock = document.getElementById('askBlock');
+  const yesBlock = document.getElementById('yesBlock');
+
+  const pleas = [
+    "Babu, ye button kaam nahi karta, doosra try karo 😅",
+    "Sona, No wala button toot gaya hai 🙈",
+    "Dekho na babu, sirf ek hi option kaam kar raha hai...",
+    "No ab bhaag raha hai jaan bacha ke 🏃‍♂️",
+    "Itni mehnat se poocha hai sona, thoda toh soch lo 🥺",
+    "Sach mein? Ek aur chance de raha hu babu 👉👈"
+  ];
+  const noTexts = ["No","Nuh-uh 🙅","Nope","Bhaag gaya 🏃‍♂️","Pakadna padega"];
+  const reactions = ["👀","😳","🥺","😅","🙈"];
+  const stickers = ['✨','⭐','🎀','💫','🌸'];
+
+  const MAX_DODGES = 5;
+  let noClicks = 0;
+  let yesScale = 1;
+  let certainty = 12;
+  let yesDone = false;
+  let noGone = false;
+  let dodging = false; // guard so one tap = one escalation, not two
+
+  function popSticker(x, y){
+    const el = document.createElement('div');
+    el.className = 'sticker-pop';
+    el.textContent = stickers[Math.floor(Math.random()*stickers.length)];
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(), 850);
+  }
+
+  function showThought(emoji){
+    thought.style.display = 'block';
+    thought.style.animation = 'none';
+    void thought.offsetWidth;
+    thought.style.animation = 'pop-in .35s cubic-bezier(.34,1.56,.64,1)';
+    thought.textContent = emoji;
+  }
+
+  function escalate(){
+    noClicks++;
+    subtext.style.opacity = 0;
+    setTimeout(()=>{
+      subtext.textContent = pleas[Math.min(noClicks-1, pleas.length-1)];
+      subtext.style.opacity = 1;
+    }, 120);
+
+    noBtn.textContent = noTexts[Math.min(noClicks-1, noTexts.length-1)];
+    showThought(reactions[Math.min(noClicks-1, reactions.length-1)]);
+
+    certainty = Math.min(certainty + 17, 97);
+    meterFill.style.width = certainty + '%';
+    meterPct.textContent = certainty + '%';
+
+    yesScale = Math.min(yesScale + 0.16, 2.2);
+    yesBtn.style.fontSize = (16 * yesScale) + 'px';
+    yesBtn.style.padding = (15*yesScale) + 'px ' + (26*yesScale) + 'px';
+
+    const shrink = Math.max(1 - noClicks*0.09, 0.45);
+    noBtn.style.fontSize = (15*shrink) + 'px';
+    noBtn.style.padding = (12*shrink) + 'px ' + (22*shrink) + 'px';
+  }
+
+  function vanishNoBtn(){
+    noGone = true;
+    noBtn.classList.add('gone');
+    subtext.style.opacity = 0;
+    setTimeout(()=>{
+      subtext.textContent = "No ne haar maan li babu, ab sirf Yes bacha hai 🐼💗";
+      subtext.style.opacity = 1;
+    }, 150);
+    showThought("🙈💕");
+    certainty = 97;
+    meterFill.style.width = '97%';
+    meterPct.textContent = '97%';
+  }
+
+  function relocateNoBtn(awayX, awayY){
+    if(!noBtn.classList.contains('roaming')){
+      const rect = noBtn.getBoundingClientRect();
+      noBtn.style.left = rect.left + 'px';
+      noBtn.style.top = rect.top + 'px';
+      noBtn.classList.add('roaming');
+      void noBtn.offsetWidth;
+    }
+    const margin = 24;
+    const w = noBtn.offsetWidth, h = noBtn.offsetHeight;
+    let x, y, tries = 0;
+    do{
+      x = margin + Math.random()*(window.innerWidth - w - margin*2);
+      y = margin + Math.random()*(window.innerHeight - h - margin*2);
+      tries++;
+    } while(Math.hypot(x - awayX, y - awayY) < 160 && tries < 12);
+    noBtn.style.left = x + 'px';
+    noBtn.style.top = y + 'px';
+    const rot = (Math.random()*50 - 25).toFixed(1);
+    noBtn.style.transform = 'rotate(' + rot + 'deg)';
+  }
+
+  // core handler for one "No" attempt (used by tap/click)
+  function dodge(e){
+    if(noGone || yesDone || dodging) return;
+    dodging = true;
+    setTimeout(()=>{ dodging = false; }, 400); // blocks the ghost/double fire on mobile taps
+
+    const rect = noBtn.getBoundingClientRect();
+    const cx = (e && e.clientX) ? e.clientX : rect.left + rect.width/2;
+    const cy = (e && e.clientY) ? e.clientY : rect.top + rect.height/2;
+    popSticker(cx, cy);
+    escalate();
+    if(noClicks >= MAX_DODGES){
+      vanishNoBtn();
+    } else {
+      relocateNoBtn(cx, cy);
+    }
+  }
+
+  // desktop-only "runs away before you even click" behaviour
+  document.addEventListener('mousemove', function(e){
+    if(yesDone || noGone || dodging) return;
+    const rect = noBtn.getBoundingClientRect();
+    const cx = rect.left + rect.width/2;
+    const cy = rect.top + rect.height/2;
+    const dist = Math.hypot(e.clientX - cx, e.clientY - cy);
+    const threshold = 60 + rect.width/2;
+    if(dist < threshold){
+      dodging = true;
+      setTimeout(()=>{ dodging = false; }, 400);
+      popSticker(e.clientX, e.clientY);
+      escalate();
+      if(noClicks >= MAX_DODGES){
+        vanishNoBtn();
+      } else {
+        relocateNoBtn(e.clientX, e.clientY);
+      }
+    }
+  });
+
+  function showYes(){
+    yesDone = true;
+    askBlock.style.display = 'none';
+    yesBlock.classList.add('active');
+    mascot.textContent = '😍';
+    mascot.classList.add('happy');
+    thought.style.display = 'none';
+    launchConfetti();
+  }
+
+  function launchConfetti(){
+    const colors = ['#FF6FA0','#8C6FE0','#FFD6EA','#C9EFFF','#FFF3C4'];
+    const shapes = ['50%','4px','2px'];
+    for(let i=0;i<80;i++){
+      const c = document.createElement('div');
+      c.className = 'confetti-piece';
+      const size = 7 + Math.random()*6;
+      c.style.width = size + 'px';
+      c.style.height = (size*1.5) + 'px';
+      c.style.left = Math.random()*100 + 'vw';
+      c.style.background = colors[Math.floor(Math.random()*colors.length)];
+      c.style.borderRadius = shapes[Math.floor(Math.random()*shapes.length)];
+      c.style.animationDuration = (2.5 + Math.random()*2) + 's';
+      c.style.animationDelay = (Math.random()*0.8) + 's';
+      document.body.appendChild(c);
+      setTimeout(()=>c.remove(), 5500);
+    }
+    for(let i=0;i<8;i++){
+      setTimeout(()=>{
+        popSticker(60 + Math.random()*(window.innerWidth-120), 100 + Math.random()*(window.innerHeight-200));
+      }, i*180);
+    }
+  }
+</script>
+
+</body>
+</html>
